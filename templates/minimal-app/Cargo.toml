@@ -1,0 +1,8 @@
+[package]
+name = "__APP_NAME__"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Ścieżkę podmienia scaffolder (tools/libluna-new.sh) albo wpisz własną.
+libluna = { path = "__LIBLUNA_PATH__" }

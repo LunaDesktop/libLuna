@@ -1,0 +1,12 @@
+[package]
+name = "libluna-widgets"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+description = "Widgety libLuny (tryb immediate): ViewSwitcher, NavList i wspólny kontekst rysowania."
+
+[dependencies]
+libluna-core.workspace = true
+libluna-render.workspace = true

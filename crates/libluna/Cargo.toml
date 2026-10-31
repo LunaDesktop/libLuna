@@ -1,0 +1,15 @@
+[package]
+name = "libluna"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+description = "Fasada libLuny — jedno wejście do całego toolkitu (core + render + platform + i18n)."
+
+[dependencies]
+libluna-core.workspace = true
+libluna-i18n.workspace = true
+libluna-render.workspace = true
+libluna-platform.workspace = true
+libluna-widgets.workspace = true
