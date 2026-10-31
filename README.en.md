@@ -33,4 +33,4 @@ cargo test --workspace
 
 ## License
 
-The code is licensed under **GPL-3.0-or-later**. The full text is in [LICENSE](LICENSE).
+The code is licensed under **MPL-2.0**. The full text is in [LICENSE](LICENSE).

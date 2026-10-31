@@ -33,4 +33,4 @@ cargo test --workspace
 
 ## Licencja
 
-Kod jest dostępny na licencji **GPL-3.0-or-later**. Pełny tekst znajduje się w pliku [LICENSE](LICENSE).
+Kod jest dostępny na licencji **MPL-2.0**. Pełny tekst znajduje się w pliku [LICENSE](LICENSE).
