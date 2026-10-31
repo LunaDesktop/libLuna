@@ -1413,12 +1413,18 @@ impl App {
             }
         };
 
-        let buffer = self.buffer.get_or_insert_with(|| {
-            self.pool
-                .create_buffer(phys_w as i32, phys_h as i32, stride, format)
-                .expect("shm buffer allocation")
-                .0
-        });
+        let buffer = {
+            let mut fresh = false;
+            let buffer = self.buffer.get_or_insert_with(|| {
+                fresh = true;
+                self.pool
+                    .create_buffer(phys_w as i32, phys_h as i32, stride, format)
+                    .expect("shm buffer allocation")
+                    .0
+            });
+            (buffer, fresh)
+        };
+        let (buffer, mut fresh) = buffer;
 
         let canvas = match self.pool.canvas(buffer) {
             Some(canvas) => canvas,
@@ -1429,6 +1435,7 @@ impl App {
                     .create_buffer(phys_w as i32, phys_h as i32, stride, format)
                     .expect("second shm buffer allocation");
                 *buffer = second;
+                fresh = true;
                 canvas
             }
         };
@@ -1437,9 +1444,19 @@ impl App {
             .min(canvas.len() / 4)
             .min(pixels.len() / 4);
         let direct = matches!(format, wl_shm::Format::Abgr8888 | wl_shm::Format::Xbgr8888);
-        // Kopiujemy tylko zmieniony prostokąt — reszta bufora shm jest już aktualna.
         let rows = (count / phys_w.max(1) as usize) as u32;
-        let damage = clamp_damage(damage, phys_w, rows);
+        let mut damage = clamp_damage(damage, phys_w, rows);
+        // Świeży bufor shm nie zawiera poprzedniej klatki — trzeba skopiować **całość**.
+        // Wcześniej kopiowaliśmy tylko damage, więc po przełączeniu buforów (kompozytor
+        // trzymał poprzedni) reszta panelu/okna była pusta i „migała” tapetą.
+        if fresh {
+            damage = DamageRect {
+                x: 0,
+                y: 0,
+                width: phys_w,
+                height: rows,
+            };
+        }
         if damage.width == 0 || damage.height == 0 {
             if force_commit {
                 self.target.commit();

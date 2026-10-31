@@ -264,6 +264,13 @@ Applications = Anwendungen
 Search applications… = Anwendungen suchen…
 No applications found = Keine Anwendungen gefunden
 Right-click to pin = Rechtsklick zum Anheften
+Right-click for options = Rechtsklick für Optionen
+Add to favorites = Zu Favoriten hinzufügen
+Remove from favorites = Aus Favoriten entfernen
+Open as administrator = Als Administrator öffnen
+Copy launch command = Startbefehl kopieren
+Uninstall = Deinstallieren
+Package not found = Paket nicht gefunden
 AC power = Netzbetrieb
 Battery {n}% = Akku {n}%
 Battery {n}% · charging = Akku {n}% · lädt
@@ -1012,6 +1019,7 @@ Open with = Öffnen mit
 Open with… = Öffnen mit…
 Always use for this file type = Immer für diesen Dateityp verwenden
 Could not start the application = Die Anwendung konnte nicht gestartet werden
+Could not set the default application = Standardanwendung konnte nicht festgelegt werden
 
 # Luna Clock — Uhr, Timer, Stoppuhr und Kalender
 Calendar = Kalender
@@ -1251,3 +1259,123 @@ Autumnal Equinox Day = Herbst-Tagundnachtgleiche
 # Luna Store — Suche und Autorisierung
 Search results = Suchergebnisse
 Administrator authorization is required to change packages (install polkit/pkexec) = Zum Ändern von Paketen ist eine Administratorgenehmigung erforderlich (polkit/pkexec installieren)
+
+# Luna Store — Status und Konfiguration
+Repository configuration = Repository-Konfiguration
+Open file = Datei öffnen
+Install and update software. = Software installieren und aktualisieren.
+Background updates = Hintergrundaktualisierungen
+Background updates and recent operations = Hintergrundaktualisierungen und letzte Vorgänge
+No operation running = Kein Vorgang läuft
+Recent operations = Letzte Vorgänge
+Operation log = Vorgangsprotokoll
+No log yet = Noch kein Protokoll
+No operations yet = Noch keine Vorgänge
+Waiting for data… = Warte auf Daten…
+{n} packages will be updated. Administrator authorization is required. = {n} Pakete werden aktualisiert. Administratorautorisierung erforderlich.
+
+Operation running in background = Vorgang läuft im Hintergrund
+
+Changing packages requires administrator approval = Änderungen an Paketen erfordern eine Administratorgenehmigung
+Administrator authorization is unavailable = Administratorautorisierung ist nicht verfügbar
+Updates available = Aktualisierungen verfügbar
+{n} updates are ready to install. = {n} Aktualisierungen können installiert werden.
+Open Store = Store öffnen
+
+Operation failed = Vorgang fehlgeschlagen
+
+Select packages = Pakete auswählen
+Install all ({n}) = Alle installieren ({n})
+Clear selection = Auswahl aufheben
+Installing selected packages… = Ausgewählte Pakete werden installiert…
+Select packages to install = Wähle Pakete zum Installieren
+
+Untitled = Unbenannt
+Save changes before closing? = Änderungen vor dem Schließen speichern?
+Save changes before opening another file? = Änderungen vor dem Öffnen einer anderen Datei speichern?
+Save changes before creating a new file? = Änderungen vor dem Erstellen einer neuen Datei speichern?
+Copied = Kopiert
+File saved = Datei gespeichert
+New file = Neue Datei
+Error = Fehler
+OK = OK
+Path to file = Pfad zur Datei
+Path to the file (relative to the current directory or starting with ~) = Pfad zur Datei (relativ oder mit ~)
+Line number = Zeilennummer
+Go to line = Gehe zu Zeile
+Pass a line number and confirm with Enter = Zeilennummer eingeben und mit Enter bestätigen
+Enter a value = Wert eingeben
+Enter a number = Zahl eingeben
+This is a directory = Das ist ein Verzeichnis
+File does not exist = Datei existiert nicht
+Overwrite = Überschreiben
+Overwrite the existing file? = Vorhandene Datei überschreiben?
+Unsaved changes = Ungespeicherte Änderungen
+Discard = Verwerfen
+Save as… = Speichern unter…
+Find = Suchen
+Find… = Suchen…
+No matches = Keine Treffer
+Redo = Wiederholen
+Go = Los
+Ln = Z
+Col = Sp
+Edit text and source code with syntax highlighting. = Text und Quellcode mit Syntaxhervorhebung bearbeiten.
+Not a regular file = Keine reguläre Datei
+File is too large = Datei ist zu groß
+Binary file = Binärdatei
+The file is not valid UTF-8 = Die Datei ist kein gültiges UTF-8
+Directory does not exist = Verzeichnis existiert nicht
+
+Select a file to preview = Datei zur Vorschau auswählen
+Toggle workspace = Projektpanel ein-/ausblenden
+Open folder = Ordner öffnen
+Workspace folder changed = Projektordner geändert
+Choose folder = Ordner auswählen
+Save changes before closing the tab? = Änderungen vor dem Schließen des Tabs speichern?
+Some files have no path. Unsaved changes will be lost. = Einige Dateien haben keinen Pfad. Ungespeicherte Änderungen gehen verloren.
+File name = Dateiname
+Enter a file name = Dateinamen eingeben
+The file has no path = Die Datei hat keinen Pfad
+File is too large to preview = Datei ist zu groß für die Vorschau
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python.
+Close tab = Tab schließen
+
+# --- Luna Security (Datenschutzmonitor) ---
+Luna Security = Luna Security
+Microphone = Mikrofon
+Camera = Kamera
+Allow = Erlauben
+Deny = Ablehnen
+Allowed = Erlaubt
+Awaiting consent = Wartet auf Zustimmung
+Denied = Abgelehnt
+Security = Sicherheit
+Remote server = Entfernter Server
+The decision will be remembered = Die Entscheidung wird gespeichert
+{app} wants to send data outside this computer = {app} möchte Daten außerhalb dieses Computers senden
+{app} is using the microphone = {app} verwendet das Mikrofon
+{app} is using the camera = {app} verwendet die Kamera
+
+New folder = Neuer Ordner
+Delete = Löschen
+Expand = Ausklappen
+Collapse = Einklappen
+Create = Erstellen
+Folder name = Ordnername
+New name = Neuer Name
+Enter a name = Namen eingeben
+Name cannot contain / or \ = Der Name darf / und \ nicht enthalten
+Already exists = Existiert bereits
+The item and any open tabs will be closed. = Das Element und alle geöffneten Tabs werden geschlossen.
+File created = Datei erstellt
+Folder created = Ordner erstellt
+Renamed = Umbenannt
+Deleted = Gelöscht
+
+Tab width = Tabulatorbreite
+Auto-indent = Automatischer Einzug
+Skip build folders = Build-Ordner überspringen
+Show project panel at startup = Projektpanel beim Start anzeigen
+Editor Settings = Editor-Einstellungen
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML.

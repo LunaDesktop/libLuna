@@ -264,6 +264,13 @@ Applications = Aplikacje
 Search applications… = Szukaj aplikacji…
 No applications found = Nie znaleziono aplikacji
 Right-click to pin = Kliknij prawym, aby przypiąć
+Right-click for options = Kliknij prawym, aby otworzyć opcje
+Add to favorites = Dodaj do ulubionych
+Remove from favorites = Usuń z ulubionych
+Open as administrator = Otwórz jako administrator
+Copy launch command = Kopiuj polecenie uruchamiające
+Uninstall = Odinstaluj
+Package not found = Nie znaleziono pakietu
 AC power = Zasilanie sieciowe
 Battery {n}% = Bateria {n}%
 Battery {n}% · charging = Bateria {n}% · ładuje
@@ -1011,6 +1018,7 @@ Open with = Otwórz za pomocą
 Open with… = Otwórz za pomocą…
 Always use for this file type = Zawsze używaj dla tego typu plików
 Could not start the application = Nie udało się uruchomić aplikacji
+Could not set the default application = Nie udało się ustawić domyślnej aplikacji
 
 # Luna Clock — zegar, minutnik, stoper i kalendarz
 Calendar = Kalendarz
@@ -1250,3 +1258,123 @@ Autumnal Equinox Day = Dzień Równonocy Jesiennej
 # Luna Store — wyszukiwanie i autoryzacja
 Search results = Wyniki wyszukiwania
 Administrator authorization is required to change packages (install polkit/pkexec) = Zmiana pakietów wymaga autoryzacji administratora (zainstaluj polkit/pkexec)
+
+# Luna Store — Status i konfiguracja
+Repository configuration = Konfiguracja repozytorium
+Open file = Otwórz plik
+Install and update software. = Instaluj i aktualizuj oprogramowanie.
+Background updates = Aktualizacje w tle
+Background updates and recent operations = Aktualizacje w tle i ostatnie operacje
+No operation running = Brak trwających operacji
+Recent operations = Ostatnie operacje
+Operation log = Dziennik operacji
+No log yet = Dziennik jest pusty
+No operations yet = Brak operacji
+Waiting for data… = Czekam na dane…
+{n} packages will be updated. Administrator authorization is required. = Zaktualizowanych zostanie {n} pakietów. Wymagane hasło administratora.
+
+Operation running in background = Operacja działa w tle
+
+Changing packages requires administrator approval = Zmiana pakietów wymaga zgody administratora
+Administrator authorization is unavailable = Autoryzacja administratora jest niedostępna
+Updates available = Dostępne aktualizacje
+{n} updates are ready to install. = Dostępnych aktualizacji: {n}.
+Open Store = Otwórz Sklep
+
+Operation failed = Operacja nie powiodła się
+
+Select packages = Zaznacz pakiety
+Install all ({n}) = Zainstaluj wszystkie ({n})
+Clear selection = Odznacz wszystko
+Installing selected packages… = Instalowanie zaznaczonych pakietów…
+Select packages to install = Zaznacz pakiety do zainstalowania
+
+Untitled = Bez tytułu
+Save changes before closing? = Zapisać zmiany przed zamknięciem?
+Save changes before opening another file? = Zapisać zmiany przed otwarciem innego pliku?
+Save changes before creating a new file? = Zapisać zmiany przed utworzeniem nowego pliku?
+Copied = Skopiowano
+File saved = Zapisano plik
+New file = Nowy plik
+Error = Błąd
+OK = OK
+Path to file = Ścieżka do pliku
+Path to the file (relative to the current directory or starting with ~) = Ścieżka do pliku (względna lub zaczynająca się od ~)
+Line number = Numer linii
+Go to line = Idź do linii
+Pass a line number and confirm with Enter = Podaj numer linii i zatwierdź Enterem
+Enter a value = Wpisz wartość
+Enter a number = Wpisz liczbę
+This is a directory = To jest katalog
+File does not exist = Plik nie istnieje
+Overwrite = Nadpisz
+Overwrite the existing file? = Nadpisać istniejący plik?
+Unsaved changes = Niezapisane zmiany
+Discard = Odrzuć
+Save as… = Zapisz jako…
+Find = Znajdź
+Find… = Znajdź…
+No matches = Brak wyników
+Redo = Ponów
+Go = Idź
+Ln = Ln
+Col = Kol
+Edit text and source code with syntax highlighting. = Edytuj tekst i kod źródłowy z podświetlaniem składni.
+Not a regular file = To nie jest zwykły plik
+File is too large = Plik jest za duży
+Binary file = Plik binarny
+The file is not valid UTF-8 = Plik nie jest poprawnym UTF-8
+Directory does not exist = Katalog nie istnieje
+
+Select a file to preview = Wybierz plik do podglądu
+Toggle workspace = Pokaż/ukryj panel projektu
+Open folder = Otwórz folder
+Workspace folder changed = Zmieniono folder projektu
+Choose folder = Wybierz folder
+Save changes before closing the tab? = Zapisać zmiany przed zamknięciem karty?
+Some files have no path. Unsaved changes will be lost. = Niektóre pliki nie mają ścieżki. Niezapisane zmiany zostaną utracone.
+File name = Nazwa pliku
+Enter a file name = Podaj nazwę pliku
+The file has no path = Plik nie ma ścieżki
+File is too large to preview = Plik jest za duży do podglądu
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python.
+Close tab = Zamknij kartę
+
+# --- Luna Security (monitor prywatności) ---
+Luna Security = Luna Security
+Microphone = Mikrofon
+Camera = Kamera
+Allow = Zezwól
+Deny = Odmów
+Allowed = dozwolone
+Awaiting consent = czeka na zgodę
+Denied = odmowa
+Security = Bezpieczeństwo
+Remote server = Zdalny serwer
+The decision will be remembered = Decyzja zostanie zapamiętana
+{app} wants to send data outside this computer = {app} chce wysyłać dane poza ten komputer
+{app} is using the microphone = {app} używa mikrofonu
+{app} is using the camera = {app} używa aparatu
+
+New folder = Nowy folder
+Delete = Usuń
+Expand = Rozwiń
+Collapse = Zwiń
+Create = Utwórz
+Folder name = Nazwa folderu
+New name = Nowa nazwa
+Enter a name = Podaj nazwę
+Name cannot contain / or \ = Nazwa nie może zawierać / ani \
+Already exists = Już istnieje
+The item and any open tabs will be closed. = Element zostanie usunięty, a otwarte karty zamknięte.
+File created = Utworzono plik
+Folder created = Utworzono folder
+Renamed = Zmieniono nazwę
+Deleted = Usunięto
+
+Tab width = Szerokość tabulatora
+Auto-indent = Automatyczne wcięcie
+Skip build folders = Pomiń foldery budowania
+Show project panel at startup = Pokazuj panel projektu przy starcie
+Editor Settings = Ustawienia edytora
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML.

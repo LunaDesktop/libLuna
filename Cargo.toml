@@ -18,12 +18,12 @@ authors = ["Patryk Szkudlarek / libLuna contributors"]
 repository = "https://github.com/mijsys/libLuna"
 
 [workspace.dependencies]
-libluna-core = { path = "crates/libluna-core", version = "0.0.6" }
-libluna-i18n = { path = "crates/libluna-i18n", version = "0.0.6" }
-libluna-render = { path = "crates/libluna-render", version = "0.0.6" }
-libluna-platform = { path = "crates/libluna-platform", version = "0.0.6" }
-libluna-widgets = { path = "crates/libluna-widgets", version = "0.0.6" }
-libluna = { path = "crates/libluna", version = "0.0.6" }
+libluna-core = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
+libluna-i18n = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
+libluna-render = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
+libluna-platform = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
+libluna-widgets = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
+libluna = { git = "https://github.com/LunaDesktop/libLuna.git", version = "0.0.6" }
 
 tiny-skia = "0.11"
 # Ikony aplikacji często istnieją tylko jako SVG (Adwaita, Papirus).

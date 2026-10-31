@@ -510,16 +510,22 @@ pub enum IconName {
     Sliders,
     Play,
     Pause,
+    /// Okrągła strzałka — odświeżanie / ponowne wczytanie.
+    Refresh,
     Moon,
     /// Tryb automatyczny (systemowy) — pół słońca, pół księżyca.
     Auto,
     /// Pinezka — „przypnij do launchera”.
     Pin,
+    /// Mikrofon — wskaźnik bezpieczeństwa (aplikacja używa mikrofonu).
+    Microphone,
+    /// Aparat — wskaźnik bezpieczeństwa (aplikacja używa kamery).
+    Camera,
 }
 
 impl IconName {
     /// Wszystkie ikony z pakietu (kolejność = kolejność w galerii).
-    pub const ALL: [IconName; 49] = [
+    pub const ALL: [IconName; 52] = [
         IconName::Menu,
         IconName::Search,
         IconName::Files,
@@ -566,9 +572,12 @@ impl IconName {
         IconName::Sliders,
         IconName::Play,
         IconName::Pause,
+        IconName::Refresh,
         IconName::Moon,
         IconName::Auto,
         IconName::Pin,
+        IconName::Microphone,
+        IconName::Camera,
     ];
 
     /// Nazwa ikony (do galerii/diagnostyki).
@@ -620,9 +629,12 @@ impl IconName {
             IconName::Sliders => "Sliders",
             IconName::Play => "Play",
             IconName::Pause => "Pause",
+            IconName::Refresh => "Refresh",
             IconName::Moon => "Moon",
             IconName::Auto => "Auto",
             IconName::Pin => "Pin",
+            IconName::Microphone => "Microphone",
+            IconName::Camera => "Camera",
         }
     }
 }
@@ -663,6 +675,33 @@ fn arc(c: Point, r: f64, a0: f64, a1: f64, segs: usize) -> Vec<Point> {
             Point::new(c.x + r * a.cos(), c.y + r * a.sin())
         })
         .collect()
+}
+
+/// Grocik strzałki odświeżania na końcu łuku (współrzędne siatki 24×24).
+///
+/// `angle` to kąt końca łuku w stopniach; `forward` to długość grocika wzdłuż
+/// kierunku obrotu, a `wing` — połowa rozpiętości jego podstawy. Zwraca trzy
+/// punkty trójkąta: skrzydło–tip–skrzydło. Grocik leży **za** końcem łuku, dzięki
+/// czemu czyta się jak strzałka, a nie jak zadzior.
+fn refresh_arrowhead(
+    cx: f64,
+    cy: f64,
+    r: f64,
+    angle: f64,
+    forward: f64,
+    wing: f64,
+) -> [(f64, f64); 3] {
+    let a = angle.to_radians();
+    let (sin, cos) = (a.sin(), a.cos());
+    let base = (cx + r * cos, cy + r * sin);
+    let tangent = (-sin, cos);
+    let normal = (cos, sin);
+    let tip = (base.0 + tangent.0 * forward, base.1 + tangent.1 * forward);
+    [
+        (base.0 + normal.0 * wing, base.1 + normal.1 * wing),
+        tip,
+        (base.0 - normal.0 * wing, base.1 - normal.1 * wing),
+    ]
 }
 
 /// Rysuje ikonę z pakietu w prostokącie `rect` w zadanym kolorze (styl symboliczny).
@@ -1689,6 +1728,12 @@ pub fn paint_icon_themed(
                 color,
             );
         }
+        IconName::Refresh => {
+            // Okrągła strzałka z grocikiem — ten sam kształt w pastelu i monochromie.
+            scene.stroke_polyline(&arc(g.p(12.0, 12.0), g.d(7.6), 45.0, 315.0, 28), w, color);
+            let [a, b, c] = refresh_arrowhead(12.0, 12.0, 7.6, 315.0, 3.2, 2.4);
+            scene.fill_polygon(&[g.p(a.0, a.1), g.p(b.0, b.1), g.p(c.0, c.1)], color);
+        }
         IconName::Moon => {
             // Ten sam sierp co w wariancie pastelowym — wcześniej monochromatyczna
             // wersja była pustym kołem i nie czytała się jako tryb ciemny.
@@ -1711,6 +1756,46 @@ pub fn paint_icon_themed(
             // Pinezka „mapowa”: zaokrąglona główka i zwężenie do ostrza.
             scene.fill_circle(g.p(12.0, 9.0), g.d(5.6), color);
             scene.fill_polygon(&[g.p(7.6, 11.2), g.p(16.4, 11.2), g.p(12.0, 21.0)], color);
+        }
+        IconName::Microphone => {
+            // Kapsuła mikrofonu + pałąk i podstawa (wskaźnik „mikrofon aktywny”).
+            scene.stroke_rounded_rect(
+                Rect::from_xywh(g.p(8.6, 3.8).x, g.p(8.6, 3.8).y, g.d(6.8), g.d(10.4)),
+                g.d(3.4),
+                w,
+                color,
+            );
+            scene.stroke_polyline(
+                &[
+                    g.p(6.2, 10.8),
+                    g.p(6.6, 13.2),
+                    g.p(8.2, 15.8),
+                    g.p(12.0, 17.0),
+                    g.p(15.8, 15.8),
+                    g.p(17.4, 13.2),
+                    g.p(17.8, 10.8),
+                ],
+                w,
+                color,
+            );
+            scene.stroke_line(g.p(12.0, 17.0), g.p(12.0, 20.2), w, color);
+            scene.stroke_line(g.p(8.8, 20.2), g.p(15.2, 20.2), w, color);
+        }
+        IconName::Camera => {
+            // Korpus kamery, „garb” z tyłu i obiektyw (wskaźnik „aparat aktywny”).
+            scene.stroke_rounded_rect(
+                Rect::from_xywh(g.p(3.6, 7.2).x, g.p(3.6, 7.2).y, g.d(16.8), g.d(11.6)),
+                g.d(2.2),
+                w,
+                color,
+            );
+            scene.fill_rounded_rect(
+                Rect::from_xywh(g.p(9.2, 5.0).x, g.p(9.2, 5.0).y, g.d(5.6), g.d(3.4)),
+                g.d(1.0),
+                color,
+            );
+            scene.stroke_circle(g.p(12.0, 13.2), g.d(4.2), w, color);
+            scene.fill_circle(g.p(12.0, 13.2), g.d(1.3), color);
         }
     }
 }
@@ -1792,6 +1877,8 @@ fn has_pastel_art(name: IconName) -> bool {
             | IconName::Check
             | IconName::Plus
             | IconName::Pin
+            | IconName::Microphone
+            | IconName::Camera
     )
 }
 
@@ -2207,6 +2294,11 @@ fn paint_pastel(paint: &mut PaintCtx, name: IconName, g: &Grid) {
         IconName::Pause => {
             p.rect(7.2, 4.8, 3.4, 14.4, 1.0, PASTEL_MINT.base);
             p.rect(13.4, 4.8, 3.4, 14.4, 1.0, PASTEL_MINT.base);
+        }
+        IconName::Refresh => {
+            p.arc(12.0, 12.0, 7.6, 45.0, 315.0, 28, 2.2, PASTEL_MINT.base);
+            let [a, b, c] = refresh_arrowhead(12.0, 12.0, 7.6, 315.0, 3.2, 2.4);
+            p.poly(&[a, b, c], PASTEL_MINT.base);
         }
         IconName::Moon => {
             let outer = arc(Point::new(12.0, 12.0), 8.6, 271.4, 27.0, 18);

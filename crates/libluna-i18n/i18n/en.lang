@@ -265,6 +265,13 @@ Applications = Applications
 Search applications… = Search applications…
 No applications found = No applications found
 Right-click to pin = Right-click to pin
+Right-click for options = Right-click for options
+Add to favorites = Add to favorites
+Remove from favorites = Remove from favorites
+Open as administrator = Open as administrator
+Copy launch command = Copy launch command
+Uninstall = Uninstall
+Package not found = Package not found
 AC power = AC power
 Battery {n}% = Battery {n}%
 Battery {n}% · charging = Battery {n}% · charging
@@ -611,6 +618,7 @@ Open with = Open with
 Open with… = Open with…
 Always use for this file type = Always use for this file type
 Could not start the application = Could not start the application
+Could not set the default application = Could not set the default application
 
 # Luna Clock — clock, timer, stopwatch and calendar
 Calendar = Calendar
@@ -751,3 +759,124 @@ China = China
 # Luna Store — search and authorization
 Search results = Search results
 Administrator authorization is required to change packages (install polkit/pkexec) = Administrator authorization is required to change packages (install polkit/pkexec)
+
+# Luna Store — Status and configuration
+Repository configuration = Repository configuration
+Open file = Open file
+Install and update software. = Install and update software.
+Background updates = Background updates
+Background updates and recent operations = Background updates and recent operations
+No operation running = No operation is running
+Recent operations = Recent operations
+Operation log = Operation log
+No log yet = No log yet
+No operations yet = No operations yet
+Waiting for data… = Waiting for data…
+{n} packages will be updated. Administrator authorization is required. = {n} packages will be updated. Administrator authorization is required.
+
+Operation running in background = Operation running in background
+
+Changing packages requires administrator approval = Changing packages requires administrator approval
+Administrator authorization is unavailable = Administrator authorization is unavailable
+Updates available = Updates available
+{n} updates are ready to install. = {n} updates are ready to install.
+Open Store = Open Store
+
+Operation failed = Operation failed
+
+Select packages = Select packages
+Install all ({n}) = Install all ({n})
+Clear selection = Clear selection
+Installing selected packages… = Installing selected packages…
+Select packages to install = Select packages to install
+
+Untitled = Untitled
+Save changes before closing? = Save changes before closing?
+Save changes before opening another file? = Save changes before opening another file?
+Save changes before creating a new file? = Save changes before creating a new file?
+Copied = Copied
+File saved = File saved
+New file = New file
+Error = Error
+OK = OK
+Path to file = Path to file
+Path to the file (relative to the current directory or starting with ~) = Path to the file (relative to the current directory or starting with ~)
+Line number = Line number
+Go to line = Go to line
+Pass a line number and confirm with Enter = Pass a line number and confirm with Enter
+Enter a value = Enter a value
+Enter a number = Enter a number
+This is a directory = This is a directory
+File does not exist = File does not exist
+Overwrite = Overwrite
+Overwrite the existing file? = Overwrite the existing file?
+Unsaved changes = Unsaved changes
+Discard = Discard
+Save as… = Save as…
+Find = Find
+Find… = Find…
+No matches = No matches
+Redo = Redo
+Go = Go
+Ln = Ln
+Col = Col
+Edit text and source code with syntax highlighting. = Edit text and source code with syntax highlighting.
+Not a regular file = Not a regular file
+File is too large = File is too large
+Binary file = Binary file
+The file is not valid UTF-8 = The file is not valid UTF-8
+Directory does not exist = Directory does not exist
+
+Select a file to preview = Select a file to preview
+Toggle workspace = Toggle workspace
+Open folder = Open folder
+Workspace folder changed = Workspace folder changed
+Choose folder = Choose folder
+Save changes before closing the tab? = Save changes before closing the tab?
+Some files have no path. Unsaved changes will be lost. = Some files have no path. Unsaved changes will be lost.
+File name = File name
+Enter a file name = Enter a file name
+The file has no path = The file has no path
+File is too large to preview = File is too large to preview
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python.
+Close tab = Close tab
+Up = Up
+
+# --- Luna Security (privacy monitor) ---
+Luna Security = Luna Security
+Microphone = Microphone
+Camera = Camera
+Allow = Allow
+Deny = Deny
+Allowed = Allowed
+Awaiting consent = Awaiting consent
+Denied = Denied
+Security = Security
+Remote server = Remote server
+The decision will be remembered = The decision will be remembered
+{app} wants to send data outside this computer = {app} wants to send data outside this computer
+{app} is using the microphone = {app} is using the microphone
+{app} is using the camera = {app} is using the camera
+
+New folder = New folder
+Delete = Delete
+Expand = Expand
+Collapse = Collapse
+Create = Create
+Folder name = Folder name
+New name = New name
+Enter a name = Enter a name
+Name cannot contain / or \ = Name cannot contain / or \
+Already exists = Already exists
+The item and any open tabs will be closed. = The item and any open tabs will be closed.
+File created = File created
+Folder created = Folder created
+Renamed = Renamed
+Deleted = Deleted
+
+Tab width = Tab width
+Auto-indent = Auto-indent
+Skip build folders = Skip build folders
+Show project panel at startup = Show project panel at startup
+Editor Settings = Editor Settings
+Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML. = Rust, TOML, JSON, Markdown, Shell, C/C++, Python, HTML, CSS, JavaScript, PHP, YAML.

@@ -16,6 +16,7 @@
 pub mod accessibility;
 pub mod accounts;
 pub mod appearance;
+pub mod civil;
 pub mod clock_state;
 pub mod color;
 pub mod config;
@@ -24,6 +25,7 @@ pub mod equalizer;
 pub mod event;
 pub mod geometry;
 pub mod greeter;
+pub mod holidays;
 pub mod icons;
 pub mod idle;
 pub mod input;
@@ -63,7 +65,7 @@ pub use style::{
     HeaderBarMetrics, ItemViewMetrics, MenuMetrics, Metrics, NavMetrics, PagerMetrics,
     PathBarMetrics, RadioMetrics, Radius, ScrollViewMetrics, SegmentedMetrics, ShortcutMetrics,
     SliderMetrics, Spacing, SpinnerMetrics, SplitMetrics, StatusPageMetrics, StepperMetrics,
-    SwitchMetrics, TabsMetrics, Theme, ToastMetrics, TooltipMetrics, Typography,
+    SwitchMetrics, SyntaxColors, TabsMetrics, Theme, ToastMetrics, TooltipMetrics, Typography,
 };
 pub use theme_file::{available as available_themes, StyledTheme, ThemePatch};
 pub use workspaces::{WorkspaceLayout, MAX_WORKSPACES, MIN_WORKSPACES};

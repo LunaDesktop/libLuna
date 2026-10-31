@@ -56,8 +56,16 @@ impl TimerActivity {
         }
     }
 
+    /// Czy minutnik jest zakończony (flaga albo minął zapisany koniec).
+    pub fn is_finished(&self, now: i64) -> bool {
+        self.finished || (self.running && self.end_unix <= now)
+    }
+
+    /// Czy warto pokazywać minutnik w widgecie (aktywny lub wstrzymany, ale nie zakończony).
+    ///
+    /// Zakończony minutnik trafia do powiadomień i znika spod paska.
     pub fn is_active(&self, now: i64) -> bool {
-        self.running || self.remaining_secs > 0 || self.finished || self.remaining_at(now) > 0
+        !self.is_finished(now) && (self.running || self.remaining_secs > 0)
     }
 
     pub fn progress(&self, now: i64) -> f64 {
@@ -302,6 +310,9 @@ mod tests {
         assert_eq!(timer.remaining_at(900), 100);
         assert_eq!(timer.remaining_at(1_000), 0);
         assert!((timer.progress(900) - 0.6667).abs() < 0.01);
+        assert!(timer.is_active(900));
+        assert!(!timer.is_active(1_000));
+        assert!(timer.is_finished(1_000));
 
         let watch = StopwatchActivity {
             elapsed_millis: 5_000,

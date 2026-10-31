@@ -847,6 +847,59 @@ impl Default for Metrics {
     }
 }
 
+/// Kolory podświetlania składni (edytor kodu, podgląd diffów, logi).
+///
+/// Warianty jasny/ciemny są dobrane pod paletę motywu, ale można je nadpisać
+/// w pliku `.theme` kluczami `syntax.<nazwa>`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SyntaxColors {
+    pub keyword: Color,
+    pub type_name: Color,
+    pub function: Color,
+    pub string: Color,
+    pub number: Color,
+    pub comment: Color,
+    pub operator: Color,
+    pub constant: Color,
+    pub variable: Color,
+}
+
+impl SyntaxColors {
+    pub const fn light() -> Self {
+        Self {
+            keyword: Color::from_rgba8(0xa6, 0x26, 0xa4, 0xff),
+            type_name: Color::from_rgba8(0xc1, 0x84, 0x01, 0xff),
+            function: Color::from_rgba8(0x40, 0x78, 0xf2, 0xff),
+            string: Color::from_rgba8(0x50, 0xa1, 0x4f, 0xff),
+            number: Color::from_rgba8(0x98, 0x68, 0x01, 0xff),
+            comment: Color::from_rgba8(0x9a, 0x9d, 0xa3, 0xff),
+            operator: Color::from_rgba8(0x01, 0x84, 0xbc, 0xff),
+            constant: Color::from_rgba8(0xe4, 0x56, 0x49, 0xff),
+            variable: Color::from_rgba8(0x38, 0x3a, 0x42, 0xff),
+        }
+    }
+
+    pub const fn dark() -> Self {
+        Self {
+            keyword: Color::from_rgba8(0xc6, 0x78, 0xdd, 0xff),
+            type_name: Color::from_rgba8(0xe5, 0xc0, 0x7b, 0xff),
+            function: Color::from_rgba8(0x61, 0xaf, 0xef, 0xff),
+            string: Color::from_rgba8(0x98, 0xc3, 0x79, 0xff),
+            number: Color::from_rgba8(0xd1, 0x9a, 0x66, 0xff),
+            comment: Color::from_rgba8(0x7f, 0x84, 0x8e, 0xff),
+            operator: Color::from_rgba8(0x56, 0xb6, 0xc2, 0xff),
+            constant: Color::from_rgba8(0xe0, 0x6c, 0x75, 0xff),
+            variable: Color::from_rgba8(0xab, 0xb2, 0xbf, 0xff),
+        }
+    }
+}
+
+impl Default for SyntaxColors {
+    fn default() -> Self {
+        Self::light()
+    }
+}
+
 /// Kompletny motyw: odstępy, promienie, typografia, geometria kontrolek i paleta.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Theme {
@@ -855,6 +908,7 @@ pub struct Theme {
     pub metrics: Metrics,
     pub typography: Typography,
     pub colors: ColorScheme,
+    pub syntax: SyntaxColors,
     pub appearance: Appearance,
 }
 
@@ -866,6 +920,7 @@ impl Theme {
             metrics: Metrics::standard(),
             typography: Typography::standard(),
             colors: ColorScheme::light(),
+            syntax: SyntaxColors::light(),
             appearance: Appearance::Light,
         }
     }
@@ -877,6 +932,7 @@ impl Theme {
             metrics: Metrics::standard(),
             typography: Typography::standard(),
             colors: ColorScheme::dark(),
+            syntax: SyntaxColors::dark(),
             appearance: Appearance::Dark,
         }
     }
