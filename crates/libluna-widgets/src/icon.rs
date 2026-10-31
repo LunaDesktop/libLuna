@@ -677,33 +677,6 @@ fn arc(c: Point, r: f64, a0: f64, a1: f64, segs: usize) -> Vec<Point> {
         .collect()
 }
 
-/// Grocik strzałki odświeżania na końcu łuku (współrzędne siatki 24×24).
-///
-/// `angle` to kąt końca łuku w stopniach; `forward` to długość grocika wzdłuż
-/// kierunku obrotu, a `wing` — połowa rozpiętości jego podstawy. Zwraca trzy
-/// punkty trójkąta: skrzydło–tip–skrzydło. Grocik leży **za** końcem łuku, dzięki
-/// czemu czyta się jak strzałka, a nie jak zadzior.
-fn refresh_arrowhead(
-    cx: f64,
-    cy: f64,
-    r: f64,
-    angle: f64,
-    forward: f64,
-    wing: f64,
-) -> [(f64, f64); 3] {
-    let a = angle.to_radians();
-    let (sin, cos) = (a.sin(), a.cos());
-    let base = (cx + r * cos, cy + r * sin);
-    let tangent = (-sin, cos);
-    let normal = (cos, sin);
-    let tip = (base.0 + tangent.0 * forward, base.1 + tangent.1 * forward);
-    [
-        (base.0 + normal.0 * wing, base.1 + normal.1 * wing),
-        tip,
-        (base.0 - normal.0 * wing, base.1 - normal.1 * wing),
-    ]
-}
-
 /// Rysuje ikonę z pakietu w prostokącie `rect` w zadanym kolorze (styl symboliczny).
 /// Nazwy freedesktop dla ikon, które mają sens w zewnętrznym zestawie.
 ///
@@ -1729,10 +1702,10 @@ pub fn paint_icon_themed(
             );
         }
         IconName::Refresh => {
-            // Okrągła strzałka z grocikiem — ten sam kształt w pastelu i monochromie.
-            scene.stroke_polyline(&arc(g.p(12.0, 12.0), g.d(7.6), 45.0, 315.0, 28), w, color);
-            let [a, b, c] = refresh_arrowhead(12.0, 12.0, 7.6, 315.0, 3.2, 2.4);
-            scene.fill_polygon(&[g.p(a.0, a.1), g.p(b.0, b.1), g.p(c.0, c.1)], color);
+            // Prawie pełny łuk + grocik w kształcie „L” — czytelny także przy 16 px.
+            scene.stroke_polyline(&arc(g.p(12.0, 12.0), g.d(7.0), 0.0, 300.0, 30), w, color);
+            scene.stroke_line(g.p(15.5, 5.94), g.p(19.0, 8.9), w, color);
+            scene.stroke_polyline(&[g.p(19.0, 5.0), g.p(19.0, 8.9), g.p(15.1, 8.9)], w, color);
         }
         IconName::Moon => {
             // Ten sam sierp co w wariancie pastelowym — wcześniej monochromatyczna
@@ -2296,9 +2269,10 @@ fn paint_pastel(paint: &mut PaintCtx, name: IconName, g: &Grid) {
             p.rect(13.4, 4.8, 3.4, 14.4, 1.0, PASTEL_MINT.base);
         }
         IconName::Refresh => {
-            p.arc(12.0, 12.0, 7.6, 45.0, 315.0, 28, 2.2, PASTEL_MINT.base);
-            let [a, b, c] = refresh_arrowhead(12.0, 12.0, 7.6, 315.0, 3.2, 2.4);
-            p.poly(&[a, b, c], PASTEL_MINT.base);
+            p.arc(12.0, 12.0, 7.0, 0.0, 300.0, 30, 2.4, PASTEL_MINT.base);
+            p.line(15.5, 5.94, 19.0, 8.9, 2.4, PASTEL_MINT.base);
+            p.line(19.0, 5.0, 19.0, 8.9, 2.4, PASTEL_MINT.base);
+            p.line(19.0, 8.9, 15.1, 8.9, 2.4, PASTEL_MINT.base);
         }
         IconName::Moon => {
             let outer = arc(Point::new(12.0, 12.0), 8.6, 271.4, 27.0, 18);
