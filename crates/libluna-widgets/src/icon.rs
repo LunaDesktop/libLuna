@@ -79,21 +79,18 @@ pub fn chevron_left(paint: &mut PaintCtx, color: Color, center: Point, size: f64
 
 /// Lupka (wyszukiwanie); środek w `center`, bok `size`.
 pub fn search(paint: &mut PaintCtx, color: Color, center: Point, size: f64) {
-    let r = size * 0.34;
-    let c = Point::new(center.x - size * 0.08, center.y - size * 0.08);
-    paint.scene.stroke_rounded_rect(
-        Rect::from_xywh(c.x - r, c.y - r, r * 2.0, r * 2.0),
-        r,
-        1.6,
-        color,
-    );
-    let a = Point::new(c.x + r * 0.75, c.y + r * 0.75);
-    paint.scene.stroke_line(
-        a,
-        Point::new(a.x + size * 0.28, a.y + size * 0.28),
-        1.6,
-        color,
-    );
+    // Lupka: okrąg + rączka pod 45°. Wcześniejsza wersja rysowała okrąg
+    // jako zaokrąglony prostokąt i zaczynała rączkę wewnątrz koła — ikona
+    // wyglądała jak klucz i była przesunięta w lewo/górę.
+    let r = size * 0.30;
+    let c = Point::new(center.x - size * 0.06, center.y - size * 0.06);
+    paint.scene.stroke_circle(c, r, 1.7, color);
+
+    let d = std::f64::consts::FRAC_1_SQRT_2;
+    let start = Point::new(c.x + r * d, c.y + r * d);
+    let end = Point::new(c.x + (r + size * 0.22) * d, c.y + (r + size * 0.22) * d);
+    // `stroke_polyline` ma zaokrąglone końce — rączka nie wygląda na uciętą.
+    paint.scene.stroke_polyline(&[start, end], 1.7, color);
 }
 
 /// Ikona katalogu (folder) w prostokącie `box_`.
