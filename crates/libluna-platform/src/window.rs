@@ -33,7 +33,7 @@ use smithay_client_toolkit::{
     compositor::{CompositorHandler, CompositorState},
     data_device_manager::{
         data_device::{DataDevice, DataDeviceData, DataDeviceHandler},
-        data_offer::{DataOfferHandler, DragOffer},
+        data_offer::{DataOfferHandler, DragOffer, SelectionOffer},
         data_source::{CopyPasteSource, DataSourceHandler},
         DataDeviceManagerState, ReadPipe, WritePipe,
     },
@@ -1238,13 +1238,15 @@ impl App {
             return;
         };
         let conn = self.conn.clone();
+        // Serial ostatniego wejścia jest wymagany przez `wl_data_offer.accept`.
+        let serial = self.last_serial;
         let slot = Arc::clone(&self.paste_text);
         let busy = Arc::clone(&self.paste_busy);
         let wake = self.wake.clone();
         let spawned = std::thread::Builder::new()
             .name("luna-paste".into())
             .spawn(move || {
-                let text = read_clipboard(&device, &conn);
+                let text = read_clipboard(&device, &conn, serial);
                 if let Ok(mut guard) = slot.lock() {
                     *guard = text;
                 }
@@ -1571,24 +1573,54 @@ fn copy_region(dst: &mut [u8], src: &[u8], width: u32, damage: DamageRect, direc
 /// Preferujemy UTF-8; limit 4 MiB chroni przed „nieskończonym” schowkiem.
 /// `flush` jest konieczny — bez niego żądanie `wl_data_offer.receive` nie
 /// dotarłoby do źródła i odczyt czekałby w nieskończoność.
-fn read_clipboard(device: &WlDataDevice, conn: &Connection) -> Option<String> {
+fn read_clipboard(device: &WlDataDevice, conn: &Connection, serial: u32) -> Option<String> {
     let data = device.data::<DataDeviceData>()?;
     let offer = data.selection_offer()?;
-    let mime = offer.with_mime_types(|types| {
-        [
-            "text/plain;charset=utf-8",
-            "text/plain",
-            "UTF8_STRING",
-            "STRING",
-        ]
-        .iter()
-        .find(|wanted| types.iter().any(|available| available == *wanted))
-        .map(|wanted| (*wanted).to_owned())
-    })?;
+    let mime = pick_clipboard_mime(&offer)?;
+    // `accept` informuje źródło o wybranym typie. Część źródeł (Xwayland,
+    // niektóre narzędzia CLI) czeka na nie przed wysłaniem danych; bez tego
+    // wklejanie działało tylko między aplikacjami libLuny. Wymaga świeżego
+    // serialu wejścia — przy braku serialu samo `receive` nadal wystarcza.
+    if serial != 0 {
+        offer.inner().accept(serial, Some(mime.clone()));
+    }
     let pipe = offer.receive(mime).ok()?;
     let _ = conn.flush();
     let bytes = read_selection_pipe(&pipe)?;
     Some(String::from_utf8_lossy(&bytes).into_owned())
+}
+
+/// Wybiera najlepszy dostępny typ MIME dla wklejanego tekstu.
+///
+/// Kolejność: UTF-8 → `text/plain` → `UTF8_STRING` → starsze typy X11.
+/// Porównujemy bez wielkości liter, bo klienci piszą `charset=UTF-8`
+/// i `charset=utf-8` zamiennie.
+fn pick_clipboard_mime(offer: &SelectionOffer) -> Option<String> {
+    offer.with_mime_types(|types| {
+        types
+            .iter()
+            .filter_map(|available| clipboard_mime_rank(available).map(|rank| (rank, available)))
+            .min_by_key(|(rank, _)| *rank)
+            .map(|(_, available)| available.clone())
+    })
+}
+
+/// Ranga typu MIME (mniejsza = lepsza); `None` dla typów nietekstowych.
+fn clipboard_mime_rank(mime: &str) -> Option<u8> {
+    let lower = mime.trim().to_ascii_lowercase();
+    let base = lower.split(';').next().unwrap_or("").trim();
+    match base {
+        "text/plain" => {
+            if lower.contains("charset=utf-8") || lower.contains("charset=utf8") {
+                Some(0)
+            } else {
+                Some(1)
+            }
+        }
+        "utf8_string" => Some(2),
+        "string" | "text" | "compound_text" => Some(3),
+        _ => None,
+    }
 }
 
 /// Czyta dane z rury schowka z limitem czasu i rozmiaru.
@@ -2164,6 +2196,19 @@ mod tests {
         assert!(!AppConfig::new("App").escape_to_exit);
         // Narzędzie, które naprawdę tego chce, może to włączyć jawnie.
         assert!(AppConfig::new("App").escape_to_exit(true).escape_to_exit);
+    }
+
+    #[test]
+    fn clipboard_prefers_utf8_and_ignores_non_text() {
+        // UTF-8 ma pierwszeństwo przed gołym `text/plain` i typami X11.
+        assert_eq!(clipboard_mime_rank("text/plain;charset=utf-8"), Some(0));
+        assert_eq!(clipboard_mime_rank("text/plain;charset=UTF-8"), Some(0));
+        assert_eq!(clipboard_mime_rank("text/plain"), Some(1));
+        assert_eq!(clipboard_mime_rank("UTF8_STRING"), Some(2));
+        assert_eq!(clipboard_mime_rank("STRING"), Some(3));
+        // Nie bierzemy HTML ani obrazków, gdy w ofercie jest tekst.
+        assert_eq!(clipboard_mime_rank("text/html"), None);
+        assert_eq!(clipboard_mime_rank("image/png"), None);
     }
 
     #[test]
