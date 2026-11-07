@@ -224,6 +224,25 @@ impl LayerConfig {
         }
     }
 
+    /// Tło pulpitu: pełnoekranowa powierzchnia **pod oknami**, bez rezerwacji
+    /// miejsca i bez fokusu klawiatury.
+    ///
+    /// Klient rysuje tylko ikony (resztę zostawia przezroczystą), więc tapeta
+    /// kompozytora pozostaje widoczna. `size = (0, 0)` oznacza „rozciągnij na
+    /// całe wyjście” — rozmiar przychodzi w `configure`.
+    pub fn background(namespace: impl Into<String>) -> Self {
+        Self {
+            namespace: namespace.into(),
+            layer: Layer::Background,
+            anchor: Anchor::TOP | Anchor::BOTTOM | Anchor::LEFT | Anchor::RIGHT,
+            size: (0, 0),
+            margin: (0, 0, 0, 0),
+            exclusive_zone: 0,
+            keyboard: false,
+            keyboard_exclusive: false,
+        }
+    }
+
     /// Pełnoekranowa powierzchnia blokady (overlay, wszystkie krawędzie,
     /// klawiatura wyłączna). Kompozytor nadaje jej fokus od razu po zmapowaniu.
     pub fn lock_screen(namespace: impl Into<String>) -> Self {
@@ -725,8 +744,23 @@ where
         }
     };
 
+    // Powierzchnia z `size = (0, 0)` dostaje rozmiar dopiero w `configure`;
+    // początkowy pool bierzemy z `initial_size`, żeby nie alokować 1×1 piksela.
     let (iw, ih) = match &config.layer {
-        Some(l) => (l.size.0.max(1), l.size.1.max(1)),
+        Some(l) => (
+            if l.size.0 == 0 {
+                config.initial_size.0
+            } else {
+                l.size.0
+            }
+            .max(1),
+            if l.size.1 == 0 {
+                config.initial_size.1
+            } else {
+                l.size.1
+            }
+            .max(1),
+        ),
         None => config.initial_size,
     };
     let pool = SlotPool::new((iw as usize * ih as usize * 4).max(1024), &shm)?;
