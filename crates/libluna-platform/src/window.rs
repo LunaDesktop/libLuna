@@ -802,6 +802,7 @@ where
         seat: None,
         last_serial: 0,
         last_pointer_serial: 0,
+        axis_source: None,
         data_device_manager,
         data_device: None,
         clipboard_source: None,
@@ -938,6 +939,10 @@ struct App {
     last_serial: u32,
     /// Serial ostatniego **wciśnięcia wskaźnika** (wymagany przez `move`/`resize`).
     last_pointer_serial: u32,
+    /// Ostatnie `axis_source` z `wl_pointer` — sctk dostarcza je w osobnym zdarzeniu
+    /// o zerowej wartości, a kolejne `axis` nie powtarza źródła. Bez zapamiętania
+    /// nie da się odróżnić rolki od gładzika przy skalowaniu kroku.
+    axis_source: Option<wl_pointer::AxisSource>,
     /// Menedżer schowka (może być niedostępny w starym kompozytorze).
     data_device_manager: Option<DataDeviceManagerState>,
     /// Urządzenie schowka dla aktywnego seat.
@@ -1818,9 +1823,11 @@ fn read_selection_pipe(pipe: &ReadPipe) -> Option<Vec<u8>> {
 ///   `ząbki × `[`SCROLL_NOTCH_PX`](libluna_core::SCROLL_NOTCH_PX),
 /// - gładzik (`Finger`/`Continuous`) → `axis` bez zmian (to już piksele).
 ///
-/// Wcześniej braliśmy surowe `axis` (20 px na ząbek), a aplikacje mnożyły je
-/// jeszcze przez wysokość wiersza — jeden obrót kółka przewijał kilkanaście
-/// wierszy i „gubił” zawartość. Teraz każdy ząbek to dokładnie jeden krok.
+/// Kompozytory wysyłają `axis` w standardowych pikselach (15 na ząbek).
+/// Rolka bez `discrete` (protokół v8+: `axis_value120`, którego sctk 0.19 nie
+/// mapuje) jest więc skalowana z 15 px do [`SCROLL_NOTCH_PX`] — dzięki temu
+/// jeden ząbek to nadal jeden krok aplikacji, a klienty zewnętrzne dostają
+/// standardowe wartości.
 fn axis_scroll_pixels(
     horizontal: AxisScroll,
     vertical: AxisScroll,
@@ -1833,6 +1840,8 @@ fn axis_scroll_pixels(
         );
         if !continuous && scroll.discrete != 0 {
             scroll.discrete as f64 * libluna_core::SCROLL_NOTCH_PX
+        } else if matches!(source, Some(wl_pointer::AxisSource::Wheel)) {
+            scroll.absolute * (libluna_core::SCROLL_NOTCH_PX / libluna_core::SCROLL_WHEEL_AXIS_PX)
         } else {
             scroll.absolute
         }
@@ -2188,7 +2197,14 @@ impl PointerHandler for App {
                     source,
                     ..
                 } => {
-                    let (dx, dy) = axis_scroll_pixels(horizontal, vertical, source);
+                    // `axis_source` przychodzi osobno (z zerowymi wartościami) i nie
+                    // powtarza się w kolejnych `axis`, więc zapamiętujemy je na czas
+                    // całej sekwencji przewijania.
+                    if let Some(src) = source {
+                        self.axis_source = Some(src);
+                    }
+                    let effective = source.or(self.axis_source);
+                    let (dx, dy) = axis_scroll_pixels(horizontal, vertical, effective);
                     // `axis_stop` i puste ramki nie są przewijaniem — nie budzimy
                     // aplikacji zdarzeniem o zerowym przesunięciu.
                     if dx == 0.0 && dy == 0.0 {
@@ -2578,22 +2594,36 @@ mod tests {
             discrete,
             stop: false,
         };
-        // Rolka: liczy się `discrete`, a nie surowe `axis` (Selene wysyła 20 px).
+        // Rolka: liczy się `discrete`, a nie surowe `axis` (Selene wysyła 15 px).
         let (dx, dy) = axis_scroll_pixels(
             notch(0, 0.0),
-            notch(1, 20.0),
+            notch(1, 15.0),
             Some(wl_pointer::AxisSource::Wheel),
         );
         assert_eq!((dx, dy), (0.0, SCROLL_NOTCH_PX));
         let (dx, dy) = axis_scroll_pixels(
             notch(0, 0.0),
-            notch(-2, -40.0),
+            notch(-2, -30.0),
             Some(wl_pointer::AxisSource::Wheel),
         );
         assert_eq!((dx, dy), (0.0, -2.0 * SCROLL_NOTCH_PX));
         // Brak `axis_source`, ale jest `discrete` (starsze kompozytory).
-        let (_, dy) = axis_scroll_pixels(notch(0, 0.0), notch(1, 20.0), None);
+        let (_, dy) = axis_scroll_pixels(notch(0, 0.0), notch(1, 15.0), None);
         assert_eq!(dy, SCROLL_NOTCH_PX);
+        // Protokół v8+: `axis_value120` jest mapowane przez platformę, więc
+        // przychodzi samo `absolute` = 15 px/ząbek — skalujemy je do kroku Luny.
+        let (_, dy) = axis_scroll_pixels(
+            notch(0, 0.0),
+            notch(0, 15.0),
+            Some(wl_pointer::AxisSource::Wheel),
+        );
+        assert_eq!(dy, SCROLL_NOTCH_PX);
+        let (_, dy) = axis_scroll_pixels(
+            notch(0, 0.0),
+            notch(0, -45.0),
+            Some(wl_pointer::AxisSource::Wheel),
+        );
+        assert_eq!(dy, -3.0 * SCROLL_NOTCH_PX);
     }
 
     #[test]
@@ -2610,13 +2640,14 @@ mod tests {
             Some(wl_pointer::AxisSource::Finger),
         );
         assert_eq!(dy, 7.5);
-        // Rolka bez `discrete` (niektóre kompozytory) — zostaje `absolute`.
+        // Rolka bez `discrete` (protokół v8+, `axis_value120`): standardowe
+        // 15 px na ząbek skalujemy do wewnętrznego kroku Luny.
         let (_, dy) = axis_scroll_pixels(
             scroll(0.0, 0),
-            scroll(120.0, 0),
+            scroll(15.0, 0),
             Some(wl_pointer::AxisSource::Wheel),
         );
-        assert_eq!(dy, 120.0);
+        assert_eq!(dy, libluna_core::SCROLL_NOTCH_PX);
     }
 
     #[test]

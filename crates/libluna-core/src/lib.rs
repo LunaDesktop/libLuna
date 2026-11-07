@@ -48,7 +48,7 @@ pub use desktop::{DesktopEntry, DesktopItemKind, DesktopSettings};
 pub use display::{DisplaySettings, OutputMode, OutputPreference};
 pub use event::{
     ButtonState, Event, KeyEvent, Modifiers, PointerButton, PointerEvent, ScrollEvent, WindowEvent,
-    SCROLL_NOTCH_PX,
+    SCROLL_NOTCH_PX, SCROLL_WHEEL_AXIS_PX,
 };
 pub use geometry::{Insets, Point, Rect, Size};
 pub use greeter::GreeterSettings;

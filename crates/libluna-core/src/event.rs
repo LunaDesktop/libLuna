@@ -61,6 +61,15 @@ pub struct PointerEvent {
 /// aplikacje nie mnożą już surowych zdarzeń przez wysokość wiersza.
 pub const SCROLL_NOTCH_PX: f64 = 64.0;
 
+/// Standardowy krok `wl_pointer.axis` dla jednego ząbka rolki (w pikselach).
+///
+/// Tyle wysyłają kompozytory zgodne z libinput/wlroots. Klienty zewnętrzne
+/// (GTK, Chromium, XWayland) zakładają właśnie taki rząd wielkości — wysłanie
+/// 64 px na ząbek powodowało u nich przeskok (XWayland dzieli wartość przez 10
+/// i generuje kilka kliknięć rolki). Wewnątrz libLuny platforma skaluje ten
+/// krok do [`SCROLL_NOTCH_PX`].
+pub const SCROLL_WHEEL_AXIS_PX: f64 = 15.0;
+
 /// Zdarzenie przewijania (rolka/gładzik); wartości w pikselach logicznych.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct ScrollEvent {
