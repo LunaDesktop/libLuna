@@ -53,12 +53,35 @@ pub struct PointerEvent {
     pub modifiers: Modifiers,
 }
 
-/// Zdarzenie przewijania (rolka/gładzik); wartości w „krokach”.
+/// Przewinięcie jednego ząbka kółka myszy w pikselach logicznych.
+///
+/// [`ScrollEvent::dx`]/[`ScrollEvent::dy`] są **zawsze w pikselach**: warstwa
+/// platformy zamienia `axis_discrete`/`axis_value120` na `ząbki ×`
+/// [`SCROLL_NOTCH_PX`], a gładzik przekazuje `axis` bez zmian. Dzięki temu
+/// aplikacje nie mnożą już surowych zdarzeń przez wysokość wiersza.
+pub const SCROLL_NOTCH_PX: f64 = 64.0;
+
+/// Zdarzenie przewijania (rolka/gładzik); wartości w pikselach logicznych.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct ScrollEvent {
     pub position: Point,
     pub dx: f64,
     pub dy: f64,
+}
+
+impl ScrollEvent {
+    /// Przewinięcie w poziomie wyrażone w „ząbkach” kółka (1.0 = jeden ząbek).
+    ///
+    /// Używać, gdy aplikacja chce przewinąć stałą liczbę wierszy na ząbek;
+    /// do przewijania w pikselach wystarczy [`ScrollEvent::dx`].
+    pub fn notches_x(&self) -> f64 {
+        self.dx / SCROLL_NOTCH_PX
+    }
+
+    /// Przewinięcie w pionie wyrażone w „ząbkach” kółka (1.0 = jeden ząbek).
+    pub fn notches_y(&self) -> f64 {
+        self.dy / SCROLL_NOTCH_PX
+    }
 }
 
 /// Zdarzenie klawiatury.

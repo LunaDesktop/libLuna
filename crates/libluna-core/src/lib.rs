@@ -46,6 +46,7 @@ pub use color::Color;
 pub use display::{DisplaySettings, OutputMode, OutputPreference};
 pub use event::{
     ButtonState, Event, KeyEvent, Modifiers, PointerButton, PointerEvent, ScrollEvent, WindowEvent,
+    SCROLL_NOTCH_PX,
 };
 pub use geometry::{Insets, Point, Rect, Size};
 pub use greeter::GreeterSettings;
