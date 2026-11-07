@@ -33,3 +33,19 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+
+  distro:
+    needs: build
+    uses: LunaDesktop/luna/.github/workflows/distro-packages.yml@main
+    with:
+      package: "libluna"
+      description: "libLuna — tłumaczenia środowiska Luna"
+      binaries: ""
+      files: |
+        crates/libluna-i18n/i18n/*.lang:/usr/share/luna/i18n/:644
+        LICENSE:/usr/share/licenses/libluna/LICENSE:644
+        README.md:/usr/share/doc/libluna/README.md:644
+      build: "cargo build --release --locked --workspace"
+      deb_depends: "libc6,libxkbcommon0,libxcursor1,libwayland-client0"
+      rpm_depends: "glibc,libxkbcommon,libXcursor,libwayland-client"
+      arch_depends: "glibc,libxkbcommon,libxcursor,wayland"
